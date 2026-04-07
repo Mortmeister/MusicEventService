@@ -1,9 +1,12 @@
-﻿namespace MusicService;
+﻿using MusicService.Data;
+
+namespace MusicService;
 
 class Program
 {
+    
     static void Main(string[] args)
     {
-        Console.WriteLine("Music Event Service!");
+        var DataStorage = new DataStorage();
     }
 }
