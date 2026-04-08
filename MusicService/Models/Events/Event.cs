@@ -40,7 +40,7 @@ public abstract class Event
         return $"{Title} || {availability} || {Date:MM/dd/yyyy} || {GetEventTypeName()}";
     }
 
-    public Event( string title, string description, EventCategory category, DateTime date, string venue, User organiser, List <TicketType>? ticketTypes)
+    public Event( string title, string description, EventCategory category, DateTime date, string venue, User organiser, List <TicketType> ticketTypes)
     {
         if (string.IsNullOrEmpty(title))
         {
@@ -62,18 +62,17 @@ public abstract class Event
             throw new ArgumentException("Event date must be in the future", nameof(date));
         }
 
-        if (organiser == null)
+        if (ticketTypes == null || ticketTypes.Count == 0)
         {
-            throw new ArgumentNullException(nameof(organiser));
+            throw new ArgumentException("Ticket types cannot be empty", nameof(ticketTypes));
         }
-        
         
         Title = title;
         Description = description;
         Category = category;
         Date = date;
         Venue = venue;
-        Organiser = organiser;
-        TicketTypes = ticketTypes ?? new List<TicketType>();
+        Organiser = organiser ?? throw new ArgumentNullException(nameof(organiser), "Organiser cannot be null");
+        TicketTypes = ticketTypes;
     }
 }
