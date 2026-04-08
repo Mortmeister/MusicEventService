@@ -37,7 +37,7 @@ public abstract class Event
     public virtual string GetSummary()
     {
         string availability = TicketTypes.Any(t=>t.IsAvailable) ? "Available" : "Sold out";
-        return $"{Title} || {availability} || {Date:MM/dd/yyyy} || {GetEventTypeName()}";
+        return $"{Title} || {availability} || {Date:dd/MM/yyyy} || {GetEventTypeName()}";
     }
 
     public Event( string title, string description, EventCategory category, DateTime date, string venue, User organiser, List <TicketType> ticketTypes)

@@ -9,7 +9,7 @@ public class TicketType
     public bool IsAvailable =>  RemainingQuantity > 0;
 
 
-    public TicketType(decimal price, string name, int quantity)
+    public TicketType(string name, decimal price, int quantity)
     {
         if(quantity <= 0)
         {
@@ -26,8 +26,8 @@ public class TicketType
             throw new ArgumentException("Name cannot be empty");
         }
         
-        Price = price;
         Name = name;
+        Price = price;
         TotalQuantity = quantity;
     }
     
