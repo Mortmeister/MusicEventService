@@ -26,11 +26,16 @@ class Program
         };
 
         var performers = new List<string> { "Aurora", "Sigrid" };
+        var lineUp = new List<string> { "Ole ivars", "Metalliva", "Hobnobs"};
 
         eventService.CreateConcert("Nordic Nights", "A great show", EventCategory.Pop,
             DateTime.Now.AddDays(30), "Spektrum, Oslo", testUser, tickets, performers, "Indie Pop");
+        eventService.CreateFestival("Findings", "The greatest festival of all time", EventCategory.Classical, DateTime.Now.AddDays(30), "Spektrum", testUser, tickets, lineUp, 3 );
         
+        
+        // Testing that creating festival and concert is working. 
         Console.WriteLine(dataStorage.Events.First().GetSummary());
-        ///
+        Console.WriteLine(dataStorage.Events.Last().GetSummary());
+        
     }
 }
