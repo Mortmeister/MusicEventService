@@ -29,6 +29,7 @@ public class TicketType
         Name = name;
         Price = price;
         TotalQuantity = quantity;
+        RemainingQuantity = quantity; 
     }
     
     public void Reserve()
