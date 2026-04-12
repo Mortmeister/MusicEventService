@@ -32,4 +32,32 @@ public class EventService
             durationInDays);
         CreateEvent(festival);
     }
+    
+    public List <Event> GetUpcomingEvents()
+    {
+        return _dataStorage.Events.Where(e => e.Status == EventStatus.Upcoming).ToList();
+    }
+
+    public List<Event> FilterEventByCategory(EventCategory category)
+    {
+        return _dataStorage.Events.Where(e => e.Category == category).ToList();
+    }
+    
+    public List<Event> FilterEventByKeyword(string keyword)
+    {
+        string lower = keyword.ToLower();
+        return _dataStorage.Events
+            .Where(e =>e.Title.ToLower().Contains(lower)
+                || e.Description.ToLower().Contains(lower)
+                || e.Venue.ToLower().Contains(lower))
+            .ToList();
+    }
+    public List<Event> FilterEventByType<T>() where T : Event
+    {
+        return _dataStorage.Events
+            .OfType<T>()
+            .Cast<Event>()
+            .ToList();
+    }
+    
 }
