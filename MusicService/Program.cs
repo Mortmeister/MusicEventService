@@ -51,64 +51,28 @@ class Program
             new List<string> { "Ole Ivars", "Hobnobs" }, 2);
 
         
-        void PrintTestTitle(string title) =>
-            Console.WriteLine($"\n=== {title} ===");
+    
+        string concertId = dataStorage.Events
+            .OfType<Concert>()
+            .First()
+            .Id;
 
-        void PrintEvents(List<Event> events)
-        {
-            if (!events.Any())
-            {
-                Console.WriteLine("No results.");
-                return;
-            }
-            foreach (var e in events)
-                Console.WriteLine(e.GetSummary());
-        }
+        Console.WriteLine($"\n=== Before Edit ===");
+        Console.WriteLine(dataStorage.Events.First(e => e.Id == concertId).GetSummary());
 
-        // --- Test GetUpcomingEvents (sorted by date) ---
-        PrintTestTitle("All Upcoming Events (sorted by date)");
-        PrintEvents(eventService.GetUpcomingEvents());
-        // Expected: Iron Maiden (15d), Norwegian Wood (20d), Nordic Nights (30d), Øya (45d), Jazz Night (60d)
+        eventService.EditConcert(
+            concertId,
+            "Nordic Nights EDITED",
+            "An even greater show",
+            EventCategory.Classical,
+            DateTime.Now.AddDays(40),
+            "Oslo Spektrum",
+            new List<string> { "Aurora", "Sigrid", "Kygo" },
+            "Indie Electronic",
+            testUser
+        );
 
-        // --- Test FilterByCategory ---
-        PrintTestTitle("Filter by Rock");
-        PrintEvents(eventService.FilterEventByCategory(EventCategory.Rock));
-        // Expected: Iron Maiden, Norwegian Wood
-
-        PrintTestTitle("Filter by Pop");
-        PrintEvents(eventService.FilterEventByCategory(EventCategory.Pop));
-        // Expected: Nordic Nights, Øyafestivalen
-
-        // --- Test FilterByType ---
-        PrintTestTitle("Filter by Concert");
-        PrintEvents(eventService.FilterEventByType<Concert>());
-        // Expected: Nordic Nights, Iron Maiden, Jazz Night
-
-        PrintTestTitle("Filter by Festival");
-        PrintEvents(eventService.FilterEventByType<Festival>());
-        // Expected: Øyafestivalen, Norwegian Wood
-
-        // --- Test FilterByKeyword ---
-        PrintTestTitle("Search: 'oslo'");
-        PrintEvents(eventService.FilterEventByKeyword("oslo"));
-        // Expected: Nordic Nights, Iron Maiden, Jazz Night (all have Oslo in venue)
-
-        PrintTestTitle("Search: 'iron maiden'");
-        PrintEvents(eventService.FilterEventByKeyword("iron maiden"));
-        // Expected: Iron Maiden Live (title match)
-
-        PrintTestTitle("Search: 'greatest'");
-        PrintEvents(eventService.FilterEventByKeyword("greatest"));
-        // Expected: Øyafestivalen (description match)
-
-        PrintTestTitle("Search: 'frogner'");
-        PrintEvents(eventService.FilterEventByKeyword("frogner"));
-        // Expected: Norwegian Wood (venue match)
-
-        PrintTestTitle("Search: 'zzznomatch'");
-        PrintEvents(eventService.FilterEventByKeyword("zzznomatch"));
-        // Expected: No results.
-
-        
+        Console.WriteLine($"\n=== After Edit ===");
+        Console.WriteLine(dataStorage.Events.First(e => e.Id == concertId).GetSummary());       
     }
 }

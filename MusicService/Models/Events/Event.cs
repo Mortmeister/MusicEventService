@@ -5,12 +5,12 @@ namespace MusicService.Models.Events;
 public abstract class Event
 {
     public string Id { get; } = Guid.NewGuid().ToString();
-    public  string Title { get; }
-    public  string Description { get; }
-    public EventCategory Category { get; }
+    public  string Title { get; private set; }
+    public  string Description { get; private set; }
+    public EventCategory Category { get; private set; }
     public EventStatus Status { get; private set; } = EventStatus.Upcoming;
-    public  DateTime Date { get; }
-    public  string Venue { get; }
+    public  DateTime Date { get; private set; }
+    public  string Venue { get; private set; }
     public User Organiser { get; }
     public List <TicketType> TicketTypes { get; }
 
@@ -74,5 +74,34 @@ public abstract class Event
         Venue = venue;
         Organiser = organiser ?? throw new ArgumentNullException(nameof(organiser), "Organiser cannot be null");
         TicketTypes = ticketTypes;
+    }
+    
+    public void Update(string title, string description, EventCategory category, DateTime date, string venue)
+    {
+        if (string.IsNullOrEmpty(title))
+        {
+            throw new ArgumentException("Title cannot be empty");
+        }
+
+        if (string.IsNullOrEmpty(description))
+        {
+            throw new ArgumentException("Description cannot be empty");
+        }
+
+        if (string.IsNullOrEmpty(venue))
+        {
+            throw new ArgumentException("Venue cannot be empty");
+        }
+
+        if (date <= Date)
+        {
+            throw new ArgumentException("Event date must be in the future", nameof(date));
+        }
+        
+        Title = title;
+        Description = description;
+        Category = category;
+        Date = date;
+        Venue = venue;
     }
 }

@@ -4,8 +4,8 @@ namespace MusicService.Models.Events;
 
 public class Concert : Event
 {
-    public List<string> Performers { get;}
-    public string Genre { get;}
+    public List<string> Performers { get; private set; }
+    public string Genre { get; private set; }
     public override string GetEventTypeName()=>"Concert";
 
     public override string GetSummary()
@@ -25,6 +25,18 @@ public class Concert : Event
         }
         
         Performers = performers;
+        Genre = genre;
+    }
+
+    public void UpdateConcertDetails(List<string> performers, string genre)
+    {
+        
+        if (performers == null || performers.Count == 0)
+        {
+            throw new ArgumentException("Performers cannot be null or empty");
+        }
+        
+        Performers =  performers;
         Genre = genre;
     }
 }
