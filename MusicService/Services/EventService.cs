@@ -84,14 +84,22 @@ public class EventService
         return  eventById;
     }
 
-    /*
-    public void EditConcert(string title, string description, EventCategory category, DateTime date, string venue, User organiser, List <TicketType> ticketTypes, List <string> performers, string genre, Event evt)
+    public void CancelEvent(string eventId, User currentUser)
     {
-        Event existing = GetEventById(evt.Id);
-        existing.Title = title;
-        existing.Description = description;
-        EditEvent(concert);
-    }*/
+        Event? eventById = GetEventById(eventId);
+
+        if (eventById == null)
+        {
+            throw new InvalidOperationException($"Event with id {eventId} not found");
+        }
+        
+        if(eventById.Organiser.Username != currentUser.Username)
+        {
+            throw new InvalidOperationException("You can only cancel your own events");
+        }
+        
+        eventById.Cancel();
+    }
     
     
     public List <Event> GetUpcomingEvents()
