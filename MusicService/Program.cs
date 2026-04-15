@@ -3,6 +3,7 @@ using MusicService.Enums;
 using MusicService.Models;
 using MusicService.Services;
 using MusicService.Models.Events;
+using MusicService.UI.Menus;
 
 namespace MusicService;
 
@@ -15,6 +16,9 @@ class Program
         
         var dataStorage = new DataStorage();
         var eventService = new EventService(dataStorage);
+        var registerService = new RegisterService(dataStorage);
+        var loginService = new LoginService(dataStorage);
+        var guestMenu = new GuestMenu(registerService, loginService);
         
         /// Generated dummy variables for testing
         var testUser = new User("Arvid","Arvid");
@@ -26,10 +30,13 @@ class Program
             new TicketType("VIP", 699, 20)
         };
         
+        guestMenu.ShowGuestMenu();
+        
         
         // TESTS STARTS HERE: 
 
         
+        /*
         eventService.CreateConcert("Nordic Nights", "A great show", EventCategory.Pop,
             DateTime.Now.AddDays(30), "Spektrum, Oslo", testUser, tickets, 
             new List<string> { "Aurora", "Sigrid" }, "Indie Pop");
@@ -73,6 +80,6 @@ class Program
         );
 
         Console.WriteLine($"\n=== After Edit ===");
-        Console.WriteLine(dataStorage.Events.First(e => e.Id == concertId).GetSummary());       
+        Console.WriteLine(dataStorage.Events.First(e => e.Id == concertId).GetSummary());     */  
     }
 }
