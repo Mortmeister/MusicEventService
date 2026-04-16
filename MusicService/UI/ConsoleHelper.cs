@@ -43,4 +43,8 @@ public class ConsoleHelper
         Console.WriteLine();
         return password;
     }
+    
+    List<T> HandleEnumToList<T>(){
+        return Enum.GetValues(typeof(T)).Cast<T>().ToList();
+    }
 }
