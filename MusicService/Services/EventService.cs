@@ -100,7 +100,26 @@ public class EventService
         
         eventById.Cancel();
     }
-    
+
+    public void AddTicketType(TicketType ticketType, Event currentEvent)
+    {
+        if (ticketType == null)
+        {
+            throw new ArgumentNullException(nameof(ticketType), "Ticket type cannot be empty");
+        }
+
+        if (currentEvent == null)
+        {
+            throw new ArgumentNullException(nameof(currentEvent), "Event cannot be empty");
+        }
+
+        if (currentEvent.Status != EventStatus.Upcoming)
+        {
+            throw new InvalidOperationException("You can only add ticketTypes to upcoming events");
+        }
+        
+        currentEvent.TicketTypes.Add(ticketType);
+    }
     
     public List <Event> GetUpcomingEvents()
     {
