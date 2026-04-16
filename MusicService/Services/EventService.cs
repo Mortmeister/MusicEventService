@@ -118,6 +118,11 @@ public class EventService
             throw new InvalidOperationException("You can only add ticketTypes to upcoming events");
         }
         
+        if (currentEvent.TicketTypes.Any(ticket => ticket.Name.ToLower().Trim() == ticketType.Name.ToLower().Trim()))
+        {
+            throw new InvalidOperationException("Ticket type already exists");
+        }
+        
         currentEvent.TicketTypes.Add(ticketType);
     }
     
