@@ -13,7 +13,7 @@ public class GuestMenu
         _registerService = registerService;
         _loginService = loginService;
     }
-    public void ShowGuestMenu()
+    public bool ShowGuestMenu()
     {
         while(true){
             Console.WriteLine("Main menu");
@@ -25,8 +25,10 @@ public class GuestMenu
             switch (choice)
             {
                 case 1: Register(); break;
-                case 2: Login(); break;
-                case 3: return;
+                case 2:
+                    if (Login()) return true; 
+                    break;
+                case 3: Exit(); return false;
             }
         }
     }
@@ -40,13 +42,20 @@ public class GuestMenu
         Console.WriteLine(register.Message);
     }
 
-    public void Login()
+    public bool Login()
     {
         string username = ConsoleHelper.GetValidString("Username: ");
         string password = ConsoleHelper.GetMaskedPassword("Password: ");
         
         var login = _loginService.Login(username, password);
         Console.WriteLine(login);
+        return login;
+    }
+
+    public void Exit()
+    {
+        Console.WriteLine("Goodbye!");
+        Environment.Exit(0);
     }
    
 }

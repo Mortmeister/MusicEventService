@@ -19,8 +19,8 @@ class Program
         var registerService = new RegisterService(dataStorage);
         var loginService = new LoginService(dataStorage);
         var guestMenu = new GuestMenu(registerService, loginService);
+        var mainMenu = new MainMenu(eventService);
         
-        /// Generated dummy variables for testing
         var testUser = new User("Arvid","Arvid");
         
         var tickets = new List<TicketType>
@@ -29,14 +29,6 @@ class Program
             new TicketType("Standard", 350, 100),
             new TicketType("VIP", 699, 20)
         };
-        
-        guestMenu.ShowGuestMenu();
-        
-        
-        // TESTS STARTS HERE: 
-
-        
-        /*
         eventService.CreateConcert("Nordic Nights", "A great show", EventCategory.Pop,
             DateTime.Now.AddDays(30), "Spektrum, Oslo", testUser, tickets, 
             new List<string> { "Aurora", "Sigrid" }, "Indie Pop");
@@ -57,8 +49,21 @@ class Program
             DateTime.Now.AddDays(20), "Frognerparken, Oslo", testUser, tickets,
             new List<string> { "Ole Ivars", "Hobnobs" }, 2);
 
+
+
+        while (true)
+        {
+            bool loggedIn = guestMenu.ShowGuestMenu();
+            if (loggedIn)
+                mainMenu.ShowMainMenu();
+        }
+        
+        // TESTS STARTS HERE: 
+
+        
         
     
+        /*
         string concertId = dataStorage.Events
             .OfType<Concert>()
             .First()
@@ -80,6 +85,6 @@ class Program
         );
 
         Console.WriteLine($"\n=== After Edit ===");
-        Console.WriteLine(dataStorage.Events.First(e => e.Id == concertId).GetSummary());     */  
+        Console.WriteLine(dataStorage.Events.First(e => e.Id == concertId).GetSummary()); */   
     }
 }
