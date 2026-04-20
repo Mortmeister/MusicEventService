@@ -146,7 +146,15 @@ public class MainMenu
     }
     public void CreateFestival()
     {
-    //
+    string title = ConsoleHelper.GetValidString("Enter a title: ");
+    string description = ConsoleHelper.GetValidString("Enter a description: "); 
+    DateTime date = ConsoleHelper.GetDate("Enter a date: ");
+    string venue = ConsoleHelper.GetValidString("Enter a venue: ");
+    int durationInDays = ConsoleHelper.GetValidInt("Enter duration in days: ");
+    string lineUpInput = ConsoleHelper.GetValidString("Enter lineup separated by commas: ");
+    List<string> lineUp = lineUpInput.Split(',').Select(p => p.Trim()).ToList();
+    
+    _eventService.CreateFestival(title, description, SelectCategory(),date, venue, _currentUser, AddTicketTypes(),lineUp, durationInDays);
     }
 
     public void SeeMyEvents()
