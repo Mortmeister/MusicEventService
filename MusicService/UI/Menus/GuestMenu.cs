@@ -1,4 +1,3 @@
-using MusicService.Data;
 using MusicService.Models;
 using MusicService.Services;
 
@@ -15,22 +14,27 @@ public class GuestMenu
         _registerService = registerService;
         _loginService = loginService;
     }
-    public bool ShowGuestMenu()
+    public User? ShowGuestMenu()
     {
-        while(true){
-            Console.WriteLine("Main menu");
+        while (true)
+        {
+            Console.WriteLine("\n=== Welcome ===");
             Console.WriteLine("1. Register");
             Console.WriteLine("2. Log in");
             Console.WriteLine("3. Exit");
-            
-            int choice = ConsoleHelper.GetValidChoice(1,3);
+
+            int choice = ConsoleHelper.GetValidChoice(1, 3);
             switch (choice)
             {
                 case 1: Register(); break;
                 case 2:
-                    if (Login() != null) return true; 
+                    User? user = Login();
+                    if (user != null) return user;
                     break;
-                case 3: Exit(); return false;
+                case 3:
+                    Console.WriteLine("Goodbye!");
+                    Exit();
+                    return null;
             }
         }
     }
@@ -44,7 +48,6 @@ public class GuestMenu
         Console.WriteLine(register.Message);
     }
 
-   
     public User? Login()
     {
         string username = ConsoleHelper.GetValidString("Username: ");
