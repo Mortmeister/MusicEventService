@@ -11,15 +11,15 @@ public class MainMenu
     private readonly EventService _eventService;
     /*private readonly BookingService _bookingService;
     private readonly ReviewService _reviewService;*/
-    /*private readonly User _currentUser;*/
+    private readonly User _currentUser;
 
-    public MainMenu(EventService eventService /*BookingService bookingService, 
-        ReviewService reviewService*/ /*User currentUser*/)
+    public MainMenu(EventService eventService, /*BookingService bookingService, 
+        ReviewService reviewService*/ User currentUser)
     {
         _eventService = eventService;
         /*_bookingService = bookingService;
         _reviewService = reviewService;*/
-        /*_currentUser = currentUser;*/
+        _currentUser = currentUser;
     }
     public void ShowMainMenu()
     {
@@ -66,6 +66,24 @@ public class MainMenu
         }
     }
 
+    public void ShowCategories(){
+        var categories = ConsoleHelper.HandleEnumToList<EventCategory>();
+   
+        int counter = 1;
+        foreach (EventCategory category in categories)
+        {
+            Console.WriteLine($"{counter}: {category}");
+            counter++;
+        }
+    }
+    
+    public EventCategory SelectCategory(){
+        Console.WriteLine("Enter Category: ");
+        ShowCategories();
+        var categories = ConsoleHelper.HandleEnumToList<EventCategory>();
+        return categories[ConsoleHelper.GetValidChoice(1, categories.Count)-1];
+    }
+    
     public void CreateEvent()
     {
            while(true)
@@ -85,13 +103,50 @@ public class MainMenu
            }
     }
 
+    private List<TicketType> AddTicketTypes()
+    {
+        
+        var ticketType = new List <TicketType>();
+        Console.WriteLine("Enter Ticket Type: ");
+        while (true)
+        {
+            string name = ConsoleHelper.GetValidString("Enter name: ");
+            Console.WriteLine("Set price");
+            decimal price = ConsoleHelper.SetPrice();
+            int quantity = ConsoleHelper.GetValidInt("Enter quantity: ");
+            
+            
+            ticketType.Add(new TicketType(name, price, quantity));
+            Console.WriteLine("Ticket type added.");
+
+            Console.WriteLine("Add another ticket type?");
+            Console.WriteLine("1. Yes");
+            Console.WriteLine("2. No");
+            
+            int choice = ConsoleHelper.GetValidChoice(1,2);
+            if (choice == 2) break;
+        }
+        return ticketType;
+    }
+    
     public void CreateConcert()
     {
-        //
+        string title = ConsoleHelper.GetValidString("Enter a title: ");
+        string description = ConsoleHelper.GetValidString("Enter a description: "); 
+             
+        DateTime date = ConsoleHelper.GetDate("Enter a date: ");
+        string venue = ConsoleHelper.GetValidString("Enter a venue: "); 
+   
+        string genre = ConsoleHelper.GetValidString("Enter a genre: ");
+        string performerInput = ConsoleHelper.GetValidString("Enter performers separated by commas: ");
+        List<string> performers = performerInput.Split(',').Select(p => p.Trim()).ToList();
+
+        
+        _eventService.CreateConcert(title, description, SelectCategory(),date, venue, _currentUser, AddTicketTypes(),performers, genre);
     }
     public void CreateFestival()
     {
-        //
+    //
     }
 
     public void SeeMyEvents()

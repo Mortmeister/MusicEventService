@@ -29,6 +29,41 @@ public class ConsoleHelper
         }
     }
     
+    public static DateTime GetDate(string prompt)
+    {
+        while (true)
+        {
+            Console.Write(prompt);
+            if (DateTime.TryParse(Console.ReadLine(), out DateTime date) && date > DateTime.Now)
+                return date;
+            Console.WriteLine("Please enter a valid future date.");
+        }
+    }
+    
+    public static decimal SetPrice()
+    {
+        while (true)
+        {
+            string input = Console.ReadLine();
+            if(!decimal.TryParse(input, out decimal price))
+            {
+                Console.WriteLine("Price must be a number");
+                continue;
+            }
+            return price;
+        }
+    }
+    
+    public static int GetValidInt(string prompt)
+    {
+        while (true)
+        {
+            Console.Write(prompt);
+            if (int.TryParse(Console.ReadLine(), out int result) )
+                return result;
+        }
+    }
+    
     public static string GetMaskedPassword(string prompt)
     {
         Console.Write(prompt);
@@ -44,7 +79,10 @@ public class ConsoleHelper
         return password;
     }
     
-    List<T> HandleEnumToList<T>(){
+    public static List<T> HandleEnumToList<T>()
+    {
         return Enum.GetValues(typeof(T)).Cast<T>().ToList();
     }
+    
+    
 }
