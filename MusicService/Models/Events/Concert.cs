@@ -13,7 +13,8 @@ public class Concert : Event
         string performers = string.Join(", ", Performers);
         return $"{base.GetSummary()} || {performers} || {Genre} ";
     }
-    
+
+
     public Concert(string title, string description, EventCategory category, 
         DateTime date, string venue, User organiser, 
         List<TicketType>? ticketTypes, List<string> performers, string genre)
@@ -26,6 +27,11 @@ public class Concert : Event
         
         Performers = performers;
         Genre = genre;
+    }
+    public override string GetPerformers()
+    {
+        string performers = string.Join(", ", Performers);
+        return performers;
     }
 
     public void UpdateConcertDetails(List<string> performers, string genre)

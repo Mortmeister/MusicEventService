@@ -40,6 +40,8 @@ public abstract class Event
         return $"{Title} || {availability} || {Date:dd/MM/yyyy} || {GetEventTypeName()}";
     }
 
+    public abstract string GetPerformers();
+
     public Event( string title, string description, EventCategory category, DateTime date, string venue, User organiser, List <TicketType> ticketTypes)
     {
         if (string.IsNullOrEmpty(title))
