@@ -9,9 +9,12 @@ namespace MusicService.UI.Menus;
 public class MainMenu
 {
     private readonly EventService _eventService;
-    /*private readonly BookingService _bookingService;
-    private readonly ReviewService _reviewService;*/
+    /*
+    private readonly BookingService _bookingService;
+    private readonly ReviewService _reviewService;
+    */
     private readonly User _currentUser;
+    
 
     public MainMenu(EventService eventService, /*BookingService bookingService, 
         ReviewService reviewService*/ User currentUser)
@@ -159,7 +162,8 @@ public class MainMenu
 
     public void SeeMyEvents()
     {
-        //
+        var _myEventsMenu = new MyEventsMenu(_eventService, _currentUser);
+        _myEventsMenu.ShowMyEventsMenu();
     }
     public void SearchForEvents()
     {

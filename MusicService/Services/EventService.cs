@@ -152,4 +152,9 @@ public class EventService
             .Cast<Event>()
             .ToList();
     }
+
+    public List<Event> GetMyEvents(User currentUser)
+    {
+        return _dataStorage.Events.Where(e => e.Organiser.Username == currentUser.Username).ToList();
+    }
 }

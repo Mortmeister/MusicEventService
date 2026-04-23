@@ -28,24 +28,6 @@ public class LoginService
         CurrentUser = null;
         return CurrentUser;
     }
-    /*
-    public bool Login(string username, string password) 
-    {
-        var user = _repo.Users.FirstOrDefault(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
-        
-   
-        string hashedInput = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password));
-
-        if (user != null && user.PasswordHash == hashedInput) 
-        {
-            CurrentUser = user;
-            return true;
-        }
-
-        CurrentUser = null;
-        return false;
-    }
-    */
 
     public void Logout() => CurrentUser = null;
 }
