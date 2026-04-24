@@ -9,19 +9,17 @@ namespace MusicService.UI.Menus;
 public class MainMenu
 {
     private readonly EventService _eventService;
-    /*
-    private readonly BookingService _bookingService;
+   
+    /*private readonly BookingService _bookingService;*/
     private readonly ReviewService _reviewService;
-    */
     private readonly User _currentUser;
-    
 
-    public MainMenu(EventService eventService, /*BookingService bookingService, 
-        ReviewService reviewService*/ User currentUser)
+    public MainMenu(EventService eventService, /*BookingService bookingService,*/ 
+        ReviewService reviewService, User currentUser)
     {
         _eventService = eventService;
-        /*_bookingService = bookingService;
-        _reviewService = reviewService;*/
+        /*_bookingService = bookingService;*/
+        _reviewService = reviewService;
         _currentUser = currentUser;
     }
     public void ShowMainMenu()
@@ -162,8 +160,7 @@ public class MainMenu
 
     public void SeeMyEvents()
     {
-        var _myEventsMenu = new MyEventsMenu(_eventService, _currentUser);
-        _myEventsMenu.ShowMyEventsMenu();
+        //
     }
     public void SearchForEvents()
     {
@@ -176,5 +173,37 @@ public class MainMenu
     public void SeeMyBookings()
     {
         //
+    }
+    
+    public void LeaveReview(Event selectedEvent)
+    {
+        
+        if (!_reviewService.IsEligible(_currentUser, selectedEvent))
+        {
+            Console.WriteLine("Error: You cannot review this event (You might be the organizer or it hasn't happened yet).");
+            return; 
+        }
+
+        
+        int rating = 0;
+        while (rating < 1 || rating > 5)
+        {
+            Console.Write("Rate this event (1-5): ");
+            string input = Console.ReadLine();
+            if (!int.TryParse(input, out rating) || rating < 1 || rating > 5)
+            {
+                Console.WriteLine("Please enter a valid number between 1 and 5.");
+            }
+        }
+
+        
+        Console.Write("Leave a comment (Optional - press Enter to skip): ");
+        string comment = Console.ReadLine();
+
+        
+        _reviewService.CreateReview(_currentUser, selectedEvent, rating, comment);
+    
+        Console.WriteLine("Success! Your review has been saved.");
+        
     }
 }
