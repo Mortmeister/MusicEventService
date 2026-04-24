@@ -20,44 +20,16 @@ class Program
         var guestMenu = new GuestMenu(registerService, loginService);
         /*var mainMenu = new MainMenu(eventService);*/
 
-        registerService.Register("test", "test");
-        var testUser = new User("test", "test");
+        var testUser = registerService.Register("test", "test");
+        var reviewService = new ReviewService(dataStorage);
         
-        
-        var tickets = new List<TicketType>
-        {
-            new TicketType("Early Bird", 199, 50),
-            new TicketType("Standard", 350, 100),
-            new TicketType("VIP", 699, 20)
-        };
 
-        eventService.CreateConcert("Nordic Nights", "A great show", EventCategory.Pop,
-            DateTime.Now.AddDays(30), "Spektrum, Oslo", testUser, tickets, 
-            new List<string> { "Aurora", "Sigrid" }, "Indie Pop");
-
-        eventService.CreateConcert("Iron Maiden Live", "Live from Oslo", EventCategory.Rock,
-            DateTime.Now.AddDays(15), "Telenor Arena, Oslo", testUser, tickets,
-            new List<string> { "Iron Maiden" }, "Rock");
-
-        eventService.CreateConcert("Jazz Night", "Smooth jazz evening", EventCategory.Jazz,
-            DateTime.Now.AddDays(60), "Blå, Oslo", testUser, tickets,
-            new List<string> { "Nils Petter Molvær" }, "Jazz");
-
-        eventService.CreateFestival("Øyafestivalen", "The greatest festival of all time", EventCategory.Pop,
-            DateTime.Now.AddDays(45), "Tøyenparken, Oslo", testUser, tickets,
-            new List<string> { "Metallica", "Aurora", "Sigrid" }, 3);
-
-        eventService.CreateFestival("Norwegian Wood", "Classic rock festival", EventCategory.Rock,
-            DateTime.Now.AddDays(20), "Frognerparken, Oslo", testUser, tickets,
-            new List<string> { "Ole Ivars", "Hobnobs" }, 2);
-        
-        
         while (true)
         {
             User? loggedIn = guestMenu.ShowGuestMenu();
             if (loggedIn != null)
             {
-                var mainMenu = new MainMenu(eventService, loggedIn);
+                var mainMenu = new MainMenu(eventService, reviewService, loggedIn);
                 mainMenu.ShowMainMenu();
             }
         }
