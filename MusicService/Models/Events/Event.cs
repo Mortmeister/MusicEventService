@@ -59,7 +59,7 @@ public abstract class Event
             throw new ArgumentException("Venue cannot be empty");
         }
 
-        if (date <= Date)
+        if (date <= DateTime.Now)
         {
             throw new ArgumentException("Event date must be in the future", nameof(date));
         }
@@ -95,7 +95,7 @@ public abstract class Event
             throw new ArgumentException("Venue cannot be empty");
         }
 
-        if (date <= Date)
+        if (date <= DateTime.Now)
         {
             throw new ArgumentException("Event date must be in the future", nameof(date));
         }

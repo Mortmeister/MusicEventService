@@ -51,7 +51,7 @@ public class EventService
         {
             throw new InvalidOperationException("You can only edit upcoming events");
         }
-        /*public void Update(string title, string description, EventCategory category, DateTime date, string venue)*/
+        
         existing.Update(title, description, category, date, venue);
         existing.UpdateConcertDetails(performers, genre);
     }

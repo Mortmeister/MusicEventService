@@ -80,13 +80,6 @@ public class MainMenu
         }
     }
     
-    public EventCategory SelectCategory(){
-        Console.WriteLine("Enter Category: ");
-        ShowCategories();
-        var categories = ConsoleHelper.HandleEnumToList<EventCategory>();
-        return categories[ConsoleHelper.GetValidChoice(1, categories.Count)-1];
-    }
-    
     public void CreateEvent()
     {
            while(true)
@@ -145,7 +138,7 @@ public class MainMenu
         List<string> performers = performerInput.Split(',').Select(p => p.Trim()).ToList();
 
         
-        _eventService.CreateConcert(title, description, SelectCategory(),date, venue, _currentUser, AddTicketTypes(),performers, genre);
+        _eventService.CreateConcert(title, description, ConsoleHelper.SelectCategory(),date, venue, _currentUser, AddTicketTypes(),performers, genre);
     }
     public void CreateFestival()
     {
@@ -157,7 +150,7 @@ public class MainMenu
     string lineUpInput = ConsoleHelper.GetValidString("Enter lineup separated by commas: ");
     List<string> lineUp = lineUpInput.Split(',').Select(p => p.Trim()).ToList();
     
-    _eventService.CreateFestival(title, description, SelectCategory(),date, venue, _currentUser, AddTicketTypes(),lineUp, durationInDays);
+    _eventService.CreateFestival(title, description, ConsoleHelper.SelectCategory(),date, venue, _currentUser, AddTicketTypes(),lineUp, durationInDays);
     }
 
     public void SeeMyEvents()

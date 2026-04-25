@@ -1,9 +1,24 @@
+using MusicService.Enums;
+
 namespace MusicService.UI;
 
 public class ConsoleHelper
 {
     
-    
+    public static EventCategory SelectCategory(){
+        
+        var categories = HandleEnumToList<EventCategory>();
+        
+        Console.WriteLine("Select a category:");
+        
+        for (int i = 0; i < categories.Count; i++)
+        {
+            Console.WriteLine($"{i + 1}. {categories[i]}");
+        }
+        
+        return categories[ConsoleHelper.GetValidChoice(1, categories.Count)-1];
+    }
+
     public static int GetValidChoice(int min, int max)
     {
         while (true)
@@ -28,6 +43,12 @@ public class ConsoleHelper
             Console.WriteLine("This field cannot be empty.");
         }
     }
+    public static string GetValidStringPrefill(string prompt, string currentValue)
+    {
+        Console.Write($"{prompt} (current: {currentValue}): ");
+        string? input = Console.ReadLine();
+        return string.IsNullOrWhiteSpace(input) ? currentValue : input;
+    }
     
     public static DateTime GetDate(string prompt)
     {
@@ -38,6 +59,16 @@ public class ConsoleHelper
                 return date;
             Console.WriteLine("Please enter a valid future date.");
         }
+    }
+    
+    public static DateTime GetDatePrefill(string prompt, DateTime currentValue)
+    {
+        Console.Write($"{prompt} (current: {currentValue:dd MMM yyyy HH:mm}): ");
+        string? input = Console.ReadLine();
+        if (string.IsNullOrWhiteSpace(input)) return currentValue;
+        return DateTime.TryParse(input, out DateTime date) && date > DateTime.Now 
+            ? date 
+            : currentValue;
     }
     
     public static decimal SetPrice()
