@@ -21,7 +21,7 @@ class Program
         /*var mainMenu = new MainMenu(eventService);*/
 
         registerService.Register("test", "test");
-        var testUser = new User("test", "test");
+        var testUser = dataStorage.Users.FirstOrDefault(u => u.Username == "test");
         
         
         var tickets = new List<TicketType>

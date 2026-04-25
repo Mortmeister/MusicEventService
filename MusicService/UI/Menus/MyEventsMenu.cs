@@ -88,7 +88,7 @@ public class MyEventsMenu
       int choice = ConsoleHelper.GetValidChoice(1, 3);
       switch (choice)
       {
-        case 1: // EditEvent(evt); 
+        case 1: EditEvent(evt); 
           break;
         case 2:
           CancelEvent(evt); return;
@@ -117,5 +117,73 @@ public class MyEventsMenu
       }
     }
   }
-  
+
+
+  public void EditEvent(Event evt)
+  {
+    if (evt is Festival festival)
+    {
+      EditFestival(festival);
+    }
+    else if (evt is Concert concert)
+    {
+      EditConcert(concert);
+      
+    }
+  }
+private void EditFestival(Festival festival)
+{
+    Console.WriteLine($"\n=== Editing: {festival.Title} ===");
+    Console.WriteLine("Press Enter to keep current value.\n");
+
+    string title = ConsoleHelper.GetValidStringPrefill("Title", festival.Title);
+    string description = ConsoleHelper.GetValidStringPrefill("Description", festival.Description);
+    DateTime date = ConsoleHelper.GetDatePrefill("Date", festival.Date);
+    string venue = ConsoleHelper.GetValidStringPrefill("Venue", festival.Venue);
+
+    string lineupInput = ConsoleHelper.GetValidStringPrefill(
+        "Lineup (comma-separated)", string.Join(", ", festival.LineUp));
+    List<string> lineup = lineupInput.Split(',').Select(p => p.Trim()).ToList();
+
+    string durationInput = ConsoleHelper.GetValidStringPrefill(
+        "Duration in days", festival.DurationInDays.ToString());
+    int duration = int.TryParse(durationInput, out int d) && d > 0 ? d : festival.DurationInDays;
+
+    try
+    {
+        _eventService.EditFestival(festival.Id, title, description,ConsoleHelper.SelectCategory(), date, venue, lineup, duration, _currentUser);
+        Console.WriteLine("Festival updated successfully.");
+    }
+    catch (InvalidOperationException ex)
+    {
+        Console.WriteLine($"Could not update festival: {ex.Message}");
+    }
+}
+
+private void EditConcert(Concert concert)
+{
+  Console.WriteLine($"Editing: {concert.Title}");
+  Console.WriteLine("Press Enter to keep current value.\n");
+
+  string title = ConsoleHelper.GetValidStringPrefill("Title", concert.Title);
+  string description = ConsoleHelper.GetValidStringPrefill("Description", concert.Description);
+  DateTime date = ConsoleHelper.GetDatePrefill("Date", concert.Date);
+  string venue = ConsoleHelper.GetValidStringPrefill("Venue", concert.Venue);
+  string genre = ConsoleHelper.GetValidStringPrefill("Genre", concert.Genre);
+
+  string performerInput = ConsoleHelper.GetValidStringPrefill(
+    "Performers (comma-separated)", string.Join(", ", concert.Performers));
+  List<string> performers = performerInput.Split(',').Select(p => p.Trim()).ToList();
+
+  try
+  {
+    _eventService.EditConcert(concert.Id, title, description, ConsoleHelper.SelectCategory(), date, venue, performers,
+      genre, _currentUser);
+    Console.WriteLine("Concert updated successfully.");
+  }
+  catch (InvalidOperationException ex)
+  {
+    Console.WriteLine($"Could not update concert: {ex.Message}");
+  }
+}
 }
