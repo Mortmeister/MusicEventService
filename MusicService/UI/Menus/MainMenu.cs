@@ -9,19 +9,19 @@ namespace MusicService.UI.Menus;
 public class MainMenu
 {
     private readonly EventService _eventService;
-    /*
     private readonly BookingService _bookingService;
+    /*
     private readonly ReviewService _reviewService;
     */
     private readonly User _currentUser;
-    
 
-    public MainMenu(EventService eventService, /*BookingService bookingService, 
-        ReviewService reviewService*/ User currentUser)
+
+    public MainMenu(EventService eventService, BookingService bookingService,
+        /*ReviewService reviewService*/ User currentUser)
     {
         _eventService = eventService;
-        /*_bookingService = bookingService;
-        _reviewService = reviewService;*/
+        _bookingService = bookingService;
+        /*_reviewService = reviewService;*/
         _currentUser = currentUser;
     }
     public void ShowMainMenu()
@@ -46,8 +46,8 @@ public class MainMenu
                 case 2: SearchForEvents(); break;
                 case 3: CreateEvent(); break;
                 case 4: SeeMyEvents(); break;
-                case 5: SeeMyReviews(); break;
-                case 6: SeeMyBookings(); break;
+                case 5: SeeMyBookings(); break;
+                case 6: SeeMyReviews(); break;
                 case 7: return;
             }
         }
@@ -168,6 +168,7 @@ public class MainMenu
     }
     public void SeeMyBookings()
     {
-        //
+        var myBookingsMenu = new MyBookingsMenu(_bookingService, _currentUser);
+        myBookingsMenu.ShowMyBookingsMenu();
     }
 }

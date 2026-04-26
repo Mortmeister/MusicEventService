@@ -15,10 +15,10 @@ class Program
         
         var dataStorage = new DataStorage();
         var eventService = new EventService(dataStorage);
+        var bookingService = new BookingService(dataStorage);
         var registerService = new RegisterService(dataStorage);
         var loginService = new LoginService(dataStorage);
         var guestMenu = new GuestMenu(registerService, loginService);
-        /*var mainMenu = new MainMenu(eventService);*/
 
         registerService.Register("test", "test");
         var testUser = dataStorage.Users.FirstOrDefault(u => u.Username == "test");
@@ -50,14 +50,27 @@ class Program
         eventService.CreateFestival("Norwegian Wood", "Classic rock festival", EventCategory.Rock,
             DateTime.Now.AddDays(20), "Frognerparken, Oslo", testUser, tickets,
             new List<string> { "Ole Ivars", "Hobnobs" }, 2);
-        
-        
+
+        // seed a buyer with a few bookings so My Bookings has something to show
+        registerService.Register("buyer", "buyer");
+        var buyer = dataStorage.Users.FirstOrDefault(u => u.Username == "buyer");
+
+        var ironMaiden = dataStorage.Events.First(e => e.Title == "Iron Maiden Live");
+        var nordicNights = dataStorage.Events.First(e => e.Title == "Nordic Nights");
+        var oyafestivalen = dataStorage.Events.First(e => e.Title == "Øyafestivalen");
+
+        bookingService.CreateBooking(buyer, ironMaiden, ironMaiden.TicketTypes[1]);
+        bookingService.CreateBooking(buyer, nordicNights, nordicNights.TicketTypes[2]);
+        var toCancel = bookingService.CreateBooking(buyer, oyafestivalen, oyafestivalen.TicketTypes[0]);
+        bookingService.CancelBooking(toCancel, buyer);
+
+
         while (true)
         {
             User? loggedIn = guestMenu.ShowGuestMenu();
             if (loggedIn != null)
             {
-                var mainMenu = new MainMenu(eventService, loggedIn);
+                var mainMenu = new MainMenu(eventService, bookingService, loggedIn);
                 mainMenu.ShowMainMenu();
             }
         }
