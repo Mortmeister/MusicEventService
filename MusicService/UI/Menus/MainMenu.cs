@@ -14,15 +14,17 @@ public class MainMenu
     private readonly ReviewService _reviewService;
     */
     private readonly User _currentUser;
+    private readonly BookingMenu _bookingMenu;
 
 
     public MainMenu(EventService eventService, BookingService bookingService,
-        /*ReviewService reviewService*/ User currentUser)
+        /*ReviewService reviewService*/ User currentUser, BookingMenu bookingMenu)
     {
         _eventService = eventService;
         _bookingService = bookingService;
         /*_reviewService = reviewService;*/
         _currentUser = currentUser;
+        _bookingMenu = bookingMenu;
     }
     public void ShowMainMenu()
     {
@@ -62,11 +64,17 @@ public class MainMenu
             Console.WriteLine("No events are currently available");
             return;
         }
-        
-        foreach (var upcomingEvent in upcomingEvents)
+
+        for (int i = 0; i < upcomingEvents.Count; i++)
         {
-            Console.WriteLine(upcomingEvent.GetSummary());
+            Console.WriteLine($"{i + 1}. {upcomingEvents[i].GetSummary()}");
         }
+        Console.WriteLine($"{upcomingEvents.Count + 1}. Back");
+
+        int choice = ConsoleHelper.GetValidChoice(1, upcomingEvents.Count + 1);
+        if (choice == upcomingEvents.Count + 1) return;
+
+        ShowEventDetails(upcomingEvents[choice - 1]);
     }
 
     public void ShowCategories(){
@@ -151,6 +159,38 @@ public class MainMenu
     List<string> lineUp = lineUpInput.Split(',').Select(p => p.Trim()).ToList();
     
     _eventService.CreateFestival(title, description, ConsoleHelper.SelectCategory(),date, venue, _currentUser, AddTicketTypes(),lineUp, durationInDays);
+    }
+
+    private void ShowEventDetails(Event evt)
+    {
+        while (true)
+        {
+            Console.WriteLine($"{evt.Title}");
+            Console.WriteLine($"{evt.GetEventTypeName()}");
+            Console.WriteLine($"Description: {evt.Description}");
+            Console.WriteLine($"Lineup: {evt.GetPerformers()}");
+            Console.WriteLine($"Date: {evt.Date:dd MMM yyyy HH:mm}");
+            Console.WriteLine($"Venue: {evt.Venue}");
+            Console.WriteLine($"Status: {evt.Status}");
+            Console.WriteLine($"Category: {evt.Category}");
+
+            Console.WriteLine("Ticket Types:");
+
+            foreach (var ticket in evt.TicketTypes)
+            {
+                Console.WriteLine($"{ticket.Name}: {ticket.Price} kr ({ticket.RemainingQuantity} remaining) ");
+            }
+
+            Console.WriteLine("1. Book event");
+            Console.WriteLine("2. Go back");
+
+            int choice = ConsoleHelper.GetValidChoice(1, 3);
+            switch (choice)
+            {
+                case 1: _bookingMenu.BookTicket(_currentUser, evt); break;
+                case 2: return;
+            }
+        }
     }
 
     public void SeeMyEvents()
