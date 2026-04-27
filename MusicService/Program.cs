@@ -19,9 +19,14 @@ class Program
         var registerService = new RegisterService(dataStorage);
         var loginService = new LoginService(dataStorage);
         var guestMenu = new GuestMenu(registerService, loginService);
+        var bookingMenu = new BookingMenu(bookingService);
 
         registerService.Register("test", "test");
+        registerService.Register("test2", "test2");
+        registerService.Register("test3", "test3");
         var testUser = dataStorage.Users.FirstOrDefault(u => u.Username == "test");
+        var testUser2 = dataStorage.Users.FirstOrDefault(u => u.Username == "test2");
+        var testUser3 = dataStorage.Users.FirstOrDefault(u => u.Username == "test3");
         
         
         var tickets = new List<TicketType>
@@ -36,11 +41,11 @@ class Program
             new List<string> { "Aurora", "Sigrid" }, "Indie Pop");
 
         eventService.CreateConcert("Iron Maiden Live", "Live from Oslo", EventCategory.Rock,
-            DateTime.Now.AddDays(15), "Telenor Arena, Oslo", testUser, tickets,
+            DateTime.Now.AddDays(15), "Telenor Arena, Oslo", testUser2, tickets,
             new List<string> { "Iron Maiden" }, "Rock");
 
         eventService.CreateConcert("Jazz Night", "Smooth jazz evening", EventCategory.Jazz,
-            DateTime.Now.AddDays(60), "Blå, Oslo", testUser, tickets,
+            DateTime.Now.AddDays(60), "Blå, Oslo", testUser3, tickets,
             new List<string> { "Nils Petter Molvær" }, "Jazz");
 
         eventService.CreateFestival("Øyafestivalen", "The greatest festival of all time", EventCategory.Pop,
@@ -70,7 +75,7 @@ class Program
             User? loggedIn = guestMenu.ShowGuestMenu();
             if (loggedIn != null)
             {
-                var mainMenu = new MainMenu(eventService, bookingService, loggedIn);
+                var mainMenu = new MainMenu(eventService, bookingService, loggedIn, bookingMenu);
                 mainMenu.ShowMainMenu();
             }
         }
