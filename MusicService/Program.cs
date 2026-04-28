@@ -1,4 +1,4 @@
-﻿using MusicService.Data;
+using MusicService.Data;
 using MusicService.Enums;
 using MusicService.Models;
 using MusicService.Services;
@@ -9,10 +9,10 @@ namespace MusicService;
 
 class Program
 {
-    
+
     static void Main(string[] args)
     {
-        
+
         var dataStorage = new DataStorage();
         var eventService = new EventService(dataStorage);
         var bookingService = new BookingService(dataStorage);
@@ -22,14 +22,15 @@ class Program
         var guestMenu = new GuestMenu(registerService, loginService);
         var bookingMenu = new BookingMenu(bookingService);
 
+
         registerService.Register("test", "test");
         registerService.Register("test2", "test2");
         registerService.Register("test3", "test3");
         var testUser = dataStorage.Users.FirstOrDefault(u => u.Username == "test");
         var testUser2 = dataStorage.Users.FirstOrDefault(u => u.Username == "test2");
         var testUser3 = dataStorage.Users.FirstOrDefault(u => u.Username == "test3");
-        
-        
+
+
         var tickets = new List<TicketType>
         {
             new TicketType("Early Bird", 199, 50),
@@ -38,7 +39,7 @@ class Program
         };
 
         eventService.CreateConcert("Nordic Nights", "A great show", EventCategory.Pop,
-            DateTime.Now.AddDays(30), "Spektrum, Oslo", testUser, tickets, 
+            DateTime.Now.AddDays(30), "Spektrum, Oslo", testUser, tickets,
             new List<string> { "Aurora", "Sigrid" }, "Indie Pop");
 
         eventService.CreateConcert("Iron Maiden Live", "Live from Oslo", EventCategory.Rock,
@@ -57,18 +58,33 @@ class Program
             DateTime.Now.AddDays(20), "Frognerparken, Oslo", testUser, tickets,
             new List<string> { "Ole Ivars", "Hobnobs" }, 2);
 
-        // seed a buyer with a few bookings so My Bookings has something to show
+        // Past event for testing reviews
+        var pastTickets = new List<TicketType>
+        {
+            new TicketType("Standard", 400, 200)
+        };
+        eventService.CreateConcert("Last Year's Show", "A show from earlier", EventCategory.Rock,
+            DateTime.Now.AddDays(7), "Sentrum Scene, Oslo", testUser3, pastTickets,
+            new List<string> { "Kvelertak" }, "Rock");
+
+
         registerService.Register("buyer", "buyer");
         var buyer = dataStorage.Users.FirstOrDefault(u => u.Username == "buyer");
 
         var ironMaiden = dataStorage.Events.First(e => e.Title == "Iron Maiden Live");
         var nordicNights = dataStorage.Events.First(e => e.Title == "Nordic Nights");
         var oyafestivalen = dataStorage.Events.First(e => e.Title == "Øyafestivalen");
+        var pastShow = dataStorage.Events.First(e => e.Title == "Last Year's Show");
 
-        bookingService.CreateBooking(buyer, ironMaiden, ironMaiden.TicketTypes[1]);
-        bookingService.CreateBooking(buyer, nordicNights, nordicNights.TicketTypes[2]);
-        var toCancel = bookingService.CreateBooking(buyer, oyafestivalen, oyafestivalen.TicketTypes[0]);
+        bookingService.CreateBooking(buyer, ironMaiden, ironMaiden.TicketTypes[1], 2);
+        bookingService.CreateBooking(buyer, nordicNights, nordicNights.TicketTypes[2], 1);
+        var toCancel = bookingService.CreateBooking(buyer, oyafestivalen, oyafestivalen.TicketTypes[0], 3);
         bookingService.CancelBooking(toCancel, buyer);
+
+        // backdate so buyer has something to review
+        bookingService.CreateBooking(buyer, pastShow, pastShow.TicketTypes[0], 1);
+        pastShow.SetPastDate(DateTime.Now.AddDays(-7));
+        pastShow.Complete();
 
 
         while (true)
@@ -76,7 +92,8 @@ class Program
             User? loggedIn = guestMenu.ShowGuestMenu();
             if (loggedIn != null)
             {
-                var mainMenu = new MainMenu(eventService,bookingService,reviewService,loggedIn,bookingMenu);
+                var reviewMenu = new ReviewMenu(reviewService, loggedIn);
+                var mainMenu = new MainMenu(eventService,bookingService,reviewService,loggedIn,bookingMenu, reviewMenu);
                 mainMenu.ShowMainMenu();
             }
         }

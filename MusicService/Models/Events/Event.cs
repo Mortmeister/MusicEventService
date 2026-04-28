@@ -32,6 +32,16 @@ public abstract class Event
         Status = EventStatus.Completed;
     }
 
+    // only used for seeding past events
+    public void SetPastDate(DateTime pastDate)
+    {
+        if (pastDate >= DateTime.Now)
+        {
+            throw new ArgumentException("Date must be in the past");
+        }
+        Date = pastDate;
+    }
+
     public abstract string GetEventTypeName();
 
     public virtual string GetSummary()

@@ -7,11 +7,13 @@ namespace MusicService.UI.Menus;
 public class MyBookingsMenu
 {
     private readonly BookingService _bookingService;
+    private readonly ReviewMenu _reviewMenu;
     private readonly User _currentUser;
 
-    public MyBookingsMenu(BookingService bookingService, User currentUser)
+    public MyBookingsMenu(BookingService bookingService, ReviewMenu reviewMenu, User currentUser)
     {
         _bookingService = bookingService;
+        _reviewMenu = reviewMenu;
         _currentUser = currentUser;
     }
 
@@ -30,52 +32,84 @@ public class MyBookingsMenu
                 return;
             }
 
-            // upcoming = confirmed bookings for events that haven't happened yet
             var upcoming = bookings
                 .Where(b => b.Status == BookingStatus.Confirmed && b.Event.Date > DateTime.Now)
                 .ToList();
 
             var past = bookings
-                .Where(b => b.Status == BookingStatus.Cancelled || b.Event.Date <= DateTime.Now)
+                .Where(b => b.Event.Date <= DateTime.Now && b.Status == BookingStatus.Confirmed)
                 .ToList();
+
+            var cancelled = bookings
+                .Where(b => b.Status == BookingStatus.Cancelled)
+                .ToList();
+
 
             Console.WriteLine("Upcoming:");
             if (upcoming.Count == 0)
-            {
                 Console.WriteLine("  None");
-            }
             for (int i = 0; i < upcoming.Count; i++)
-            {
                 Console.WriteLine($"  {i + 1}. {FormatBooking(upcoming[i])}");
-            }
+
 
             if (past.Count > 0)
             {
-                Console.WriteLine();
-                Console.WriteLine("Past:");
-                foreach (var b in past)
-                {
-                    Console.WriteLine($"   - {FormatBooking(b)}");
-                }
+                Console.WriteLine("Past attended:");
+                for (int i = 0; i < past.Count; i++)
+                    Console.WriteLine($"  {i + 1}. {FormatBooking(past[i])}");
             }
 
+
+            if (cancelled.Count > 0)
+            {
+                Console.WriteLine("\nCancelled:");
+                foreach (var b in cancelled)
+                    Console.WriteLine($"  - {FormatBooking(b)}");
+            }
+
+
             Console.WriteLine();
-            Console.WriteLine("0. Go back");
+            int option = 1;
+            int cancelOption = -1;
+            int reviewOption = -1;
+            int backOption;
+
             if (upcoming.Count > 0)
-                Console.Write($"Select a booking to cancel (1-{upcoming.Count}) or 0 to go back: ");
-            else
-                Console.Write("Press 0 to go back: ");
+            {
+                Console.WriteLine($"{option}. Cancel an upcoming booking");
+                cancelOption = option++;
+            }
+            if (past.Count > 0)
+            {
+                Console.WriteLine($"{option}. Leave a review for a past event");
+                reviewOption = option++;
+            }
 
-            int choice = ConsoleHelper.GetValidChoice(0, upcoming.Count);
-            if (choice == 0) return;
+            backOption = option;
+            Console.WriteLine($"{backOption}. Go back");
 
-            CancelBooking(upcoming[choice - 1]);
+            int choice = ConsoleHelper.GetValidChoice(1, backOption);
+
+            if (choice == backOption) return;
+
+            if (choice == cancelOption)
+            {
+                Console.Write($"Select an upcoming booking to cancel (1-{upcoming.Count}): ");
+                int i = ConsoleHelper.GetValidChoice(1, upcoming.Count);
+                CancelBooking(upcoming[i - 1]);
+            }
+            else if (choice == reviewOption)
+            {
+                Console.Write($"Select a past booking to review (1-{past.Count}): ");
+                int i = ConsoleHelper.GetValidChoice(1, past.Count);
+                _reviewMenu.LeaveReview(past[i - 1].Event);
+            }
         }
     }
 
     private string FormatBooking(Booking b)
     {
-        return $"{b.Event.Title} | {b.TicketType.Name} | {b.PriceAtBooking} kr " +
+        return $"{b.Event.Title} | {b.TicketType.Name} x{b.Quantity} | {b.TotalPrice} kr " +
                $"| booked {b.DateBooked:dd MMM yyyy} | {b.BookingReference} | {b.Status}";
     }
 

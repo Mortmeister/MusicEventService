@@ -14,7 +14,7 @@ public class BookingService
         _storage = storage;
     }
 
-    public Booking CreateBooking(User user, Event evt, TicketType ticket)
+    public Booking CreateBooking(User user, Event evt, TicketType ticket, int quantity)
     {
         // sjekk at brukeren ikke booker sitt eget event
         if (evt.Organiser == user)
@@ -26,9 +26,9 @@ public class BookingService
         if (!ticket.IsAvailable)
             throw new InvalidOperationException("This ticket type is sold out");
 
-        ticket.Reserve();
+        ticket.Reserve(quantity);
 
-        var booking = new Booking(evt, ticket, user);
+        var booking = new Booking(evt, ticket, user, quantity);
         _storage.Bookings.Add(booking);
         return booking;
     }
@@ -39,7 +39,7 @@ public class BookingService
             throw new InvalidOperationException("You can only cancel your own bookings");
 
         booking.Cancel();
-        booking.TicketType.Release();
+        booking.TicketType.Release(booking.Quantity);
     }
 
     public List<Booking> GetBookingsForUser(User user)

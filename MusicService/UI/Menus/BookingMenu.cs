@@ -36,7 +36,7 @@ public class BookingMenu
             Console.WriteLine($"  {i + 1}. {t.Name} - {t.Price} kr ({availability})");
         }
 
-        // siste valg er å avbryte
+        
         Console.WriteLine($"  {evt.TicketTypes.Count + 1}. Cancel");
         Console.Write($"Select a ticket type (1-{evt.TicketTypes.Count + 1}): ");
 
@@ -45,14 +45,25 @@ public class BookingMenu
 
         var selected = evt.TicketTypes[choice - 1];
 
+        if (!selected.IsAvailable)
+        {
+            Console.WriteLine("Sorry, this ticket type is sold out.");
+            return;
+        }
+
+        // ticket quanitity
+        int max = Math.Min(20, selected.RemainingQuantity);
+        Console.Write($"How many tickets? (1-{max}): ");
+        int quantity = ConsoleHelper.GetValidChoice(1, max);
+
         try
         {
-            var booking = _bookingService.CreateBooking(user, evt, selected);
+            var booking = _bookingService.CreateBooking(user, evt, selected, quantity);
 
             Console.WriteLine();
             Console.WriteLine("Booking confirmed!");
             Console.WriteLine($"  Event: {booking.Event.Title}");
-            Console.WriteLine($"  Ticket: {booking.TicketType.Name} - {booking.PriceAtBooking} kr");
+            Console.WriteLine($"  Ticket: {booking.TicketType.Name} x{booking.Quantity} - {booking.TotalPrice} kr ({booking.PriceAtBooking} kr each)");
             Console.WriteLine($"  Booked: {booking.DateBooked:dd MMMM yyyy}");
             Console.WriteLine($"  Reference: {booking.BookingReference}");
             Console.WriteLine();

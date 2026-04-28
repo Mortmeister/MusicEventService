@@ -12,26 +12,28 @@ public class MainMenu
     private readonly BookingService _bookingService;
 
     private readonly ReviewService _reviewService;
-  
+
     private readonly User _currentUser;
     private readonly BookingMenu _bookingMenu;
+    private readonly ReviewMenu _reviewMenu;
 
 
     public MainMenu(EventService eventService, BookingService bookingService,
-        ReviewService reviewService, User currentUser, BookingMenu bookingMenu)
+        ReviewService reviewService, User currentUser, BookingMenu bookingMenu,  ReviewMenu reviewMenu)
     {
         _eventService = eventService;
         _bookingService = bookingService;
         _reviewService = reviewService;
         _currentUser = currentUser;
         _bookingMenu = bookingMenu;
+        _reviewMenu = reviewMenu;
     }
     public void ShowMainMenu()
     {
         Console.WriteLine("Welcome to Music Service");
-        
+
         while(true){
-        
+
             Console.WriteLine("Where are you doing today?");
             Console.WriteLine("1. Browse Events");
             Console.WriteLine("2. Search for Events");
@@ -40,7 +42,7 @@ public class MainMenu
             Console.WriteLine("5. My Bookings");
             Console.WriteLine("6. My reviews");
             Console.WriteLine("7. Logout");
-            
+
             int choice = ConsoleHelper.GetValidChoice(1,7);
             switch (choice)
             {
@@ -49,12 +51,12 @@ public class MainMenu
                 case 3: CreateEvent(); break;
                 case 4: SeeMyEvents(); break;
                 case 5: SeeMyBookings(); break;
-                case 6: SeeMyReviews(); break;
+                case 6: _reviewMenu.SeeMyReviews(); break;
                 case 7: return;
             }
         }
     }
-    
+
     public void ShowAvailableEvents()
     {
         var upcomingEvents = _eventService.GetUpcomingEvents();
@@ -79,7 +81,7 @@ public class MainMenu
 
     public void ShowCategories(){
         var categories = ConsoleHelper.HandleEnumToList<EventCategory>();
-   
+
         int counter = 1;
         foreach (EventCategory category in categories)
         {
@@ -87,7 +89,7 @@ public class MainMenu
             counter++;
         }
     }
-    
+
     public void CreateEvent()
     {
            while(true)
@@ -96,12 +98,12 @@ public class MainMenu
                   Console.WriteLine("1. Concert");
                   Console.WriteLine("2. Festival");
                   Console.WriteLine("3. Exit");
-                  
+
                   int choice = ConsoleHelper.GetValidChoice(1,3);
                   switch (choice)
                   {
                       case 1: CreateConcert(); break;
-                      case 2: CreateFestival(); break; 
+                      case 2: CreateFestival(); break;
                       case 3: return;
                   }
            }
@@ -109,7 +111,7 @@ public class MainMenu
 
     private List<TicketType> AddTicketTypes()
     {
-        
+
         var ticketType = new List <TicketType>();
         Console.WriteLine("Enter Ticket Type: ");
         while (true)
@@ -118,46 +120,46 @@ public class MainMenu
             Console.WriteLine("Set price");
             decimal price = ConsoleHelper.SetPrice();
             int quantity = ConsoleHelper.GetValidInt("Enter quantity: ");
-            
-            
+
+
             ticketType.Add(new TicketType(name, price, quantity));
             Console.WriteLine("Ticket type added.");
 
             Console.WriteLine("Add another ticket type?");
             Console.WriteLine("1. Yes");
             Console.WriteLine("2. No");
-            
+
             int choice = ConsoleHelper.GetValidChoice(1,2);
             if (choice == 2) break;
         }
         return ticketType;
     }
-    
+
     public void CreateConcert()
     {
         string title = ConsoleHelper.GetValidString("Enter a title: ");
-        string description = ConsoleHelper.GetValidString("Enter a description: "); 
-             
+        string description = ConsoleHelper.GetValidString("Enter a description: ");
+
         DateTime date = ConsoleHelper.GetDate("Enter a date: ");
-        string venue = ConsoleHelper.GetValidString("Enter a venue: "); 
-   
+        string venue = ConsoleHelper.GetValidString("Enter a venue: ");
+
         string genre = ConsoleHelper.GetValidString("Enter a genre: ");
         string performerInput = ConsoleHelper.GetValidString("Enter performers separated by commas: ");
         List<string> performers = performerInput.Split(',').Select(p => p.Trim()).ToList();
 
-        
+
         _eventService.CreateConcert(title, description, ConsoleHelper.SelectCategory(),date, venue, _currentUser, AddTicketTypes(),performers, genre);
     }
     public void CreateFestival()
     {
     string title = ConsoleHelper.GetValidString("Enter a title: ");
-    string description = ConsoleHelper.GetValidString("Enter a description: "); 
+    string description = ConsoleHelper.GetValidString("Enter a description: ");
     DateTime date = ConsoleHelper.GetDate("Enter a date: ");
     string venue = ConsoleHelper.GetValidString("Enter a venue: ");
     int durationInDays = ConsoleHelper.GetValidInt("Enter duration in days: ");
     string lineUpInput = ConsoleHelper.GetValidString("Enter lineup separated by commas: ");
     List<string> lineUp = lineUpInput.Split(',').Select(p => p.Trim()).ToList();
-    
+
     _eventService.CreateFestival(title, description, ConsoleHelper.SelectCategory(),date, venue, _currentUser, AddTicketTypes(),lineUp, durationInDays);
     }
 
@@ -202,13 +204,10 @@ public class MainMenu
     {
         //
     }
-    public void SeeMyReviews()
-    {
-        //
-    }
+
     public void SeeMyBookings()
     {
-        var myBookingsMenu = new MyBookingsMenu(_bookingService, _currentUser);
+        var myBookingsMenu = new MyBookingsMenu(_bookingService,_reviewMenu, _currentUser);
         myBookingsMenu.ShowMyBookingsMenu();
     }
 }

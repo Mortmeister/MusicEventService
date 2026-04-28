@@ -32,22 +32,30 @@ public class TicketType
         RemainingQuantity = quantity; 
     }
     
-    public void Reserve()
+    public void Reserve(int quantity)
     {
-        if (RemainingQuantity <= 0)
+        if (quantity <= 0)
         {
-            throw new InvalidOperationException("Ticket type is already reserved");
+            throw new ArgumentException("Quantity must be greater than zero");
         }
-        RemainingQuantity--;
+        if (RemainingQuantity < quantity)
+        {
+            throw new InvalidOperationException("Not enough tickets available");
+        }
+        RemainingQuantity -= quantity;
     }
-    
-    public void Release(){
-        if (RemainingQuantity == TotalQuantity)
+
+    public void Release(int quantity){
+        if (quantity <= 0)
         {
-            throw new InvalidOperationException("All tickets are already released");
+            throw new ArgumentException("Quantity must be greater than zero");
         }
-        
-        RemainingQuantity++;
+        if (RemainingQuantity + quantity > TotalQuantity)
+        {
+            throw new InvalidOperationException("Cannot release more than total");
+        }
+
+        RemainingQuantity += quantity;
     }
 }
 
