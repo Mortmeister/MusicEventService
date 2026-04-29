@@ -47,7 +47,9 @@ public class MainMenu
             switch (choice)
             {
                 case 1: ShowAvailableEvents(); break;
-                case 2: SearchForEvents(); break;
+                case 2: var search = new SearchMenu(_eventService, _bookingMenu, _currentUser);
+                    search.ShowSearchMenu();
+                    break;
                 case 3: CreateEvent(); break;
                 case 4: SeeMyEvents(); break;
                 case 5: SeeMyBookings(); break;
@@ -189,7 +191,10 @@ public class MainMenu
             int choice = ConsoleHelper.GetValidChoice(1, 3);
             switch (choice)
             {
-                case 1: _bookingMenu.BookTicket(_currentUser, evt); break;
+                case 1: _bookingMenu.BookTicket(_currentUser, evt); 
+                    Console.WriteLine("\nPress any key to continue..."); 
+                    Console.ReadKey();                                       
+                    break;
                 case 2: return;
             }
         }

@@ -8,10 +8,14 @@ namespace MusicService.UI.Menus;
 public class SearchMenu
 {
     private readonly EventService _eventService;
+    private readonly BookingMenu _bookingMenu;
+    private readonly User _currentUser;
 
-    public SearchMenu(EventService eventService)
+    public SearchMenu(EventService eventService, BookingMenu bookingMenu, User currentUser)
     {
         _eventService = eventService;
+        _bookingMenu = bookingMenu;
+        _currentUser = currentUser;
     }
 
     public void ShowSearchMenu()
@@ -112,27 +116,58 @@ public class SearchMenu
         }
     }
 
-    private void ShowEventDetails(Event ev)
+    private void ShowEventDetails(Event evt)
     {
-        Console.Clear();
-        Console.WriteLine("=== EVENT DETAILS ===");
-        Console.WriteLine($"Title:       {ev.Title}");
-        Console.WriteLine($"Category:    {ev.Category}");
-        Console.WriteLine($"Date:        {ev.Date:dd/MM/yyyy HH:mm}");
-        Console.WriteLine($"Venue:       {ev.Venue}");
-        Console.WriteLine($"Description: {ev.Description}");
         
- 
-        if (ev is Concert concert)
+        while (true)
         {
-            Console.WriteLine($"Artist(s):   {string.Join(", ", concert.Performers)}");
-        }
-        else if (ev is Festival festival)
-        {
-            Console.WriteLine($"Duration:    {festival.DurationInDays} days");
-        }
+            Console.Clear();
+            Console.WriteLine("=== EVENT DETAILS ===");
+            Console.WriteLine($"Title:       {evt.Title}");
+            Console.WriteLine($"Category:    {evt.Category}");
+            Console.WriteLine($"Date:        {evt.Date:dd/MMM/yyyy HH:mm}"); 
+            Console.WriteLine($"Venue:       {evt.Venue}");
+            Console.WriteLine($"Description: {evt.Description}");
 
-        Console.WriteLine("\nPress any key to return to the list...");
-        Console.ReadKey();
+           
+            if (evt is Concert concert)
+            {
+                Console.WriteLine($"Artist(s):   {string.Join(", ", concert.GetPerformers())}");
+            }
+            else if (evt is Festival festival)
+            {
+               
+                Console.WriteLine($"Duration:    {festival.DurationInDays} days"); 
+            }
+
+         
+            Console.WriteLine("\nTicket Types:");
+            foreach (var ticket in evt.TicketTypes)
+            {
+                Console.WriteLine($"- {ticket.Name}: {ticket.Price} kr ({ticket.RemainingQuantity} remaining)");
+            }
+
+        
+            Console.WriteLine("\n1. Book event");
+            Console.WriteLine("2. Go back");
+
+       
+            int choice = ConsoleHelper.GetValidChoice(1, 2);
+
+           
+            switch (choice)
+            {
+                case 1:
+                   
+                     _bookingMenu.BookTicket(_currentUser, evt); 
+                    Console.WriteLine("\nPress any key to continue..."); 
+                    Console.ReadKey();                                  
+                    break;
+                  
+                case 2:
+                    return;
+            }
+        }
     }
+  
 }
