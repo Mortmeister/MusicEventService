@@ -1,0 +1,25 @@
+
+# Build folders
+bin/
+obj/
+
+# Rider
+/.idea/
+*.iml
+
+# User-specific Rider files
+*.sln.iml
+
+# Datasource / local data
+dataSources/
+dataSources.local.xml
+
+# HTTP requests
+httpRequests/
+
+# Query files
+queries/
+
+# OS files
+.DS_Store
+Thumbs.db
