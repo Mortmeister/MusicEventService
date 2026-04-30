@@ -1,7 +1,10 @@
 using MusicService.Enums;
 
 namespace MusicService.Models.Events;
-
+// Concert.cs
+/// <summary>
+/// Represents a concert event with a set of performers and a genre.
+/// </summary>
 public class Concert : Event
 {
     public List<string> Performers { get; private set; }
@@ -14,6 +17,7 @@ public class Concert : Event
         return $"{base.GetSummary()} || {performers} || {Genre} ";
     }
 
+    /// <summary>Returns a formatted one-line summary including performers and genre.</summary>
 
     public Concert(string title, string description, EventCategory category, 
         DateTime date, string venue, User organiser, 
@@ -28,12 +32,17 @@ public class Concert : Event
         Performers = performers;
         Genre = genre;
     }
+    
+    /// <summary>Returns a comma-separated string of performer names.</summary>
+
     public override string GetPerformers()
     {
         string performers = string.Join(", ", Performers);
         return performers;
     }
-
+    /// <summary>
+    /// Updates concert-specific fields.
+    /// </summary>
     public void UpdateConcertDetails(List<string> performers, string genre)
     {
         

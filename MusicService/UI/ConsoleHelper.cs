@@ -4,7 +4,7 @@ namespace MusicService.UI;
 
 public class ConsoleHelper
 {
-    
+    /// <summary>Prompts the user to select an event category from a numbered list.</summary>
     public static EventCategory SelectCategory(){
         
         var categories = HandleEnumToList<EventCategory>();
@@ -19,6 +19,7 @@ public class ConsoleHelper
         return categories[ConsoleHelper.GetValidChoice(1, categories.Count)-1];
     }
 
+    /// <summary>Loops until the user enters a valid integer within the given range.</summary>
     public static int GetValidChoice(int min, int max)
     {
         while (true)
@@ -31,7 +32,8 @@ public class ConsoleHelper
             Console.Write("Invalid selection. Try again: ");
         }
     }
-
+    
+    /// <summary>Loops until the user enters a non-empty string.</summary>
     public static string GetValidString(string prompt)
     {
         while (true)
@@ -43,6 +45,10 @@ public class ConsoleHelper
             Console.WriteLine("This field cannot be empty.");
         }
     }
+    
+    /// <summary>
+    /// Prompts for a string, showing the current value. Returns current value if input is empty.
+    /// </summary>
     public static string GetValidStringPrefill(string prompt, string currentValue)
     {
         Console.Write($"{prompt} (current: {currentValue}): ");
@@ -50,6 +56,7 @@ public class ConsoleHelper
         return string.IsNullOrWhiteSpace(input) ? currentValue : input;
     }
     
+    /// <summary>Loops until the user enters a valid future date.</summary>
     public static DateTime GetDate(string prompt)
     {
         while (true)
@@ -61,6 +68,9 @@ public class ConsoleHelper
         }
     }
     
+    /// <summary>
+    /// Prompts for a date, showing the current value. Returns current value if input is empty or invalid.
+    /// </summary>
     public static DateTime GetDatePrefill(string prompt, DateTime currentValue)
     {
         Console.Write($"{prompt} (current: {currentValue:dd MMM yyyy HH:mm}): ");
@@ -71,6 +81,7 @@ public class ConsoleHelper
             : currentValue;
     }
     
+    /// <summary>Loops until the user enters a valid decimal number for a price.</summary>
     public static decimal SetPrice()
     {
         while (true)
@@ -85,6 +96,7 @@ public class ConsoleHelper
         }
     }
     
+    /// <summary>Loops until the user enters a valid integer.</summary>
     public static int GetValidInt(string prompt)
     {
         while (true)
@@ -94,7 +106,7 @@ public class ConsoleHelper
                 return result;
         }
     }
-    
+    /// <summary>Reads a password from the console, masking each character with an asterisk.</summary>
     public static string GetMaskedPassword(string prompt)
     {
         Console.Write(prompt);
@@ -109,7 +121,7 @@ public class ConsoleHelper
         Console.WriteLine();
         return password;
     }
-    
+    /// <summary>Converts all values of an enum type to a typed list.</summary>
     public static List<T> HandleEnumToList<T>()
     {
         return Enum.GetValues(typeof(T)).Cast<T>().ToList();

@@ -3,6 +3,9 @@ using MusicService.Models.Events;
 
 namespace MusicService.Models;
 
+/// <summary>
+/// Represents a ticket booking made by a user for an event.
+/// </summary>
 public class Booking
 {
     public string BookingReference { get; } = $"BK-{Guid.NewGuid().ToString()[..5].ToUpper()}";
@@ -15,6 +18,9 @@ public class Booking
     public User User { get; }
     public BookingStatus Status { get; private set; }
 
+    /// <summary>
+    /// Cancels this booking. Only valid for confirmed bookings.
+    /// </summary>
     public void Cancel()
     {
         if (Status != BookingStatus.Confirmed)
@@ -23,6 +29,10 @@ public class Booking
         }
         Status = BookingStatus.Cancelled;
     }
+    
+    /// <summary>
+    /// Initializes a new Booking for the given event, ticket type, user, and quantity.
+    /// </summary>
     public Booking(Event e, TicketType ticketType, User user, int quantity){
         Event = e;
         TicketType = ticketType;

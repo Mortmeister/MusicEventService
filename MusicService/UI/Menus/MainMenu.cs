@@ -6,6 +6,9 @@ using MusicService.Services;
 
 namespace MusicService.UI.Menus;
 
+/// <summary>
+/// The main navigation menu shown after login. Routes the user to all major features.
+/// </summary>
 public class MainMenu
 {
     private readonly EventService _eventService;
@@ -28,6 +31,9 @@ public class MainMenu
         _bookingMenu = bookingMenu;
         _reviewMenu = reviewMenu;
     }
+    /// <summary>
+    /// Displays the main menu in a loop until the user logs out.
+    /// </summary>
     public void ShowMainMenu()
     {
         Console.WriteLine("Welcome to Music Service");
@@ -58,7 +64,8 @@ public class MainMenu
             }
         }
     }
-
+    
+    /// <summary>Lists all upcoming events and allows the user to view details and book.</summary>
     public void ShowAvailableEvents()
     {
         var upcomingEvents = _eventService.GetUpcomingEvents();
@@ -80,7 +87,8 @@ public class MainMenu
 
         ShowEventDetails(upcomingEvents[choice - 1]);
     }
-
+    
+    /// <summary>Displays all available event categories.</summary>
     public void ShowCategories(){
         var categories = ConsoleHelper.HandleEnumToList<EventCategory>();
 
@@ -91,7 +99,8 @@ public class MainMenu
             counter++;
         }
     }
-
+    
+    /// <summary>Prompts the user to choose between creating a Concert or Festival.</summary>
     public void CreateEvent()
     {
            while(true)
@@ -110,7 +119,8 @@ public class MainMenu
                   }
            }
     }
-
+    
+    /// <summary>Collects ticket type details in a loop and returns the list.</summary>
     private List<TicketType> AddTicketTypes()
     {
 
@@ -136,7 +146,8 @@ public class MainMenu
         }
         return ticketType;
     }
-
+    
+    /// <summary>Collects concert details from the user and creates a new Concert via EventService.</summary>
     public void CreateConcert()
     {
         string title = ConsoleHelper.GetValidString("Enter a title: ");
@@ -152,6 +163,8 @@ public class MainMenu
 
         _eventService.CreateConcert(title, description, ConsoleHelper.SelectCategory(),date, venue, _currentUser, AddTicketTypes(),performers, genre);
     }
+    
+    /// <summary>Collects festival details from the user and creates a new Festival via EventService.</summary>
     public void CreateFestival()
     {
     string title = ConsoleHelper.GetValidString("Enter a title: ");
@@ -164,7 +177,8 @@ public class MainMenu
 
     _eventService.CreateFestival(title, description, ConsoleHelper.SelectCategory(),date, venue, _currentUser, AddTicketTypes(),lineUp, durationInDays);
     }
-
+    
+    /// <summary>Shows full details for a selected event, with options to book or go back.</summary>
     private void ShowEventDetails(Event evt)
     {
         while (true)
@@ -200,16 +214,14 @@ public class MainMenu
         }
     }
 
+    /// <summary>Opens the My Events menu for the current user.</summary>
     public void SeeMyEvents()
     {
         var _myEventsMenu = new MyEventsMenu(_eventService, _currentUser);
         _myEventsMenu.ShowMyEventsMenu();
     }
-    public void SearchForEvents()
-    {
-        //
-    }
 
+    /// <summary>Opens the My Bookings menu for the current user.</summary>
     public void SeeMyBookings()
     {
         var myBookingsMenu = new MyBookingsMenu(_bookingService,_reviewMenu, _currentUser);

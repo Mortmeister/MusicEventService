@@ -9,6 +9,9 @@ public class TicketType
     public bool IsAvailable =>  RemainingQuantity > 0;
 
 
+    /// <summary>
+    /// Represents a ticket option for an event, with a name, price, and limited quantity.
+    /// </summary>
     public TicketType(string name, decimal price, int quantity)
     {
         if(quantity <= 0)
@@ -32,6 +35,9 @@ public class TicketType
         RemainingQuantity = quantity; 
     }
     
+    /// <summary>
+    /// Reserves the specified number of tickets.
+    /// </summary>
     public void Reserve(int quantity)
     {
         if (quantity <= 0)
@@ -45,6 +51,9 @@ public class TicketType
         RemainingQuantity -= quantity;
     }
 
+    /// <summary>
+    /// Returns the specified number of tickets to the available pool.
+    /// </summary>
     public void Release(int quantity){
         if (quantity <= 0)
         {

@@ -1,6 +1,9 @@
 using MusicService.Enums;
 namespace MusicService.Models.Events;
 
+// <summary>
+/// Represents a festival event with a lineup of acts and a duration in days.
+/// </summary>
 public class Festival : Event
 {
 
@@ -21,6 +24,9 @@ public class Festival : Event
         return lineUp;
     }
 
+    /// <summary>
+    /// Initializes a new Festival with the specified details.
+    /// </summary>
     public Festival(string title, string description, EventCategory category, DateTime date, string venue,
         User organiser, List<TicketType>? ticketTypes, List <string> lineUp, int durationInDays) : base(title, description,
         category, date, venue, organiser, ticketTypes)
@@ -38,7 +44,9 @@ public class Festival : Event
         LineUp = lineUp;
         DurationInDays = durationInDays;
     }
-
+    /// <summary>
+    /// Updates festival-specific fields.
+    /// </summary>
     public void UpdateFestivalDetails(List<string> lineUp, int durationInDays)
     {
         if (durationInDays <= 0)

@@ -1,7 +1,9 @@
 using MusicService.Enums;
 
 namespace MusicService.Models.Events;
-
+/// <summary>
+/// Abstract base class for all event types. Contains shared fields, status management, and validation.
+/// </summary>
 public abstract class Event
 {
     public string Id { get; } = Guid.NewGuid().ToString();
@@ -14,6 +16,10 @@ public abstract class Event
     public User Organiser { get; }
     public List <TicketType> TicketTypes { get; }
 
+    
+    /// <summary>
+    /// Cancels the event. Only valid for upcoming events.
+    /// </summary>
     public void Cancel()
     {
         if (Status != EventStatus.Upcoming)
@@ -21,7 +27,9 @@ public abstract class Event
             throw new InvalidOperationException("Only upcoming events can be cancelled");
         }
         Status = EventStatus.Cancelled;
-    }
+    } /// <summary>
+    /// Completes the event. Only valid for upcoming events.
+    /// </summary>
 
     public void Complete()
     {
@@ -41,17 +49,23 @@ public abstract class Event
         }
         Date = pastDate;
     }
-
+    
+    /// <summary>Returns the event type name, e.g. "Concert" or "Festival".</summary>
     public abstract string GetEventTypeName();
 
+    /// <summary>Returns a formatted one-line summary for use in list views.</summary>
     public virtual string GetSummary()
     {
         string availability = TicketTypes.Any(t=>t.IsAvailable) ? "Available" : "Sold out";
         return $"{Title} || {availability} || {Date:dd/MM/yyyy} || {GetEventTypeName()}";
     }
 
+    /// <summary>Returns a formatted string of performers or lineup acts.</summary>
     public abstract string GetPerformers();
 
+    /// <summary>
+    /// Initializes a new Event with the specified details.
+    /// </summary>
     public Event( string title, string description, EventCategory category, DateTime date, string venue, User organiser, List <TicketType> ticketTypes)
     {
         if (string.IsNullOrEmpty(title))
@@ -88,6 +102,10 @@ public abstract class Event
         TicketTypes = ticketTypes;
     }
     
+    
+    /// <summary>
+    /// Updates shared event fields. Only valid for upcoming events.
+    /// </summary>
     public void Update(string title, string description, EventCategory category, DateTime date, string venue)
     {
         if (string.IsNullOrEmpty(title))
