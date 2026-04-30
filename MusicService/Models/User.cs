@@ -1,7 +1,9 @@
 using MusicService.Models.Events;
 
 namespace MusicService.Models;
-
+/// <summary>
+/// Represents a registered user of the platform.
+/// </summary>
 public class User
 {
     public string Username { get; private set; }

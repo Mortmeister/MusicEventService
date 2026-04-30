@@ -3,7 +3,10 @@ using MusicService.Services;
 
 namespace MusicService.UI.Menus;
 
-
+/// <summary>
+/// Displays the guest menu and handles registration and login flows.
+/// Returns the logged-in User on success, or null if the user exits.
+/// </summary>
 public class GuestMenu
 {
     private readonly RegisterService _registerService;
@@ -14,6 +17,9 @@ public class GuestMenu
         _registerService = registerService;
         _loginService = loginService;
     }
+    /// <summary>
+    /// Shows the guest menu in a loop until the user logs in or exits.
+    /// </summary>
     public User? ShowGuestMenu()
     {
         while (true)
@@ -39,6 +45,7 @@ public class GuestMenu
         }
     }
 
+    /// <summary>Prompts for credentials and registers a new account.</summary>
     public void Register()
     {
         string username = ConsoleHelper.GetValidString("Username: ");
@@ -48,6 +55,8 @@ public class GuestMenu
         Console.WriteLine(register.Message);
     }
 
+    /// <summary>Prompts for credentials and attempts login.</summary>
+    /// <returns>The logged-in User if successful, otherwise null.</returns>
     public User? Login()
     {
         string username = ConsoleHelper.GetValidString("Username: ");
@@ -57,7 +66,8 @@ public class GuestMenu
         Console.WriteLine(login);
         return login;
     }
-
+    
+    /// <summary>Exits the application.</summary>
     public void Exit()
     {
         Console.WriteLine("Goodbye!");

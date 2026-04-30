@@ -2,6 +2,9 @@ using MusicService.Models.Events;
 
 namespace MusicService.Models;
 
+/// <summary>
+/// Represents a review left by an attendee for an event they attended.
+/// </summary>
 public class Review
 {
     public User Author { get; }
@@ -9,7 +12,10 @@ public class Review
     public int Rating { get; }
     public string? Comment { get; }
     public DateTime DateReviewed { get; }
-
+    
+    /// <summary>
+    /// Initializes a new Review.
+    /// </summary>
     public Review(User author, Event evt, int rating, string? comment)
     {
         if (rating is > 6 or < 1)
