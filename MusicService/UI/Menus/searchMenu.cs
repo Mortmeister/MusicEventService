@@ -4,20 +4,30 @@ using MusicService.Enums;
 using MusicService.Models.Events;
 
 namespace MusicService.UI.Menus;
-
+/// <summary>
+/// Provides a user interface for browsing, searching, and filtering available music events.
+/// </summary>
 public class SearchMenu
 {
     private readonly EventService _eventService;
     private readonly BookingMenu _bookingMenu;
     private readonly User _currentUser;
-
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SearchMenu"/> class.
+    /// </summary>
+    /// <param name="eventService">The service used to retrieve and filter event data.</param>
+    /// <param name="bookingMenu">The menu used to handle the ticket booking process.</param>
+    /// <param name="currentUser">The user currently browsing the events.</param>
     public SearchMenu(EventService eventService, BookingMenu bookingMenu, User currentUser)
     {
         _eventService = eventService;
         _bookingMenu = bookingMenu;
         _currentUser = currentUser;
     }
-
+    /// <summary>
+    /// Displays the main search interface, allowing users to apply filters for keywords, genres, 
+    /// or event types, and select events to view further details.
+    /// </summary>
     public void ShowSearchMenu()
     {
 
@@ -115,7 +125,10 @@ public class SearchMenu
             }
         }
     }
-
+    /// <summary>
+    /// Displays detailed information about a specific event and provides an option to book tickets.
+    /// </summary>
+    /// <param name="evt">The event to display details for.</param>
     private void ShowEventDetails(Event evt)
     {
         

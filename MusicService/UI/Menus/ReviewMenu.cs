@@ -2,11 +2,18 @@
 using MusicService.Models.Events;
 
 namespace MusicService.UI.Menus;
-
+/// <summary>
+/// Provides a user interface for managing and submitting reviews for music events.
+/// </summary>
 public class ReviewMenu
 {
     private readonly ReviewService _reviewService;
     private readonly User _currentUser;
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ReviewMenu"/> class.
+    /// </summary>
+    /// <param name="reviewService">The service used to handle review data logic.</param>
+    /// <param name="currentUser">The user currently interacting with the menu.</param>
 
     public ReviewMenu(ReviewService reviewService, User currentUser)
     {
@@ -15,7 +22,9 @@ public class ReviewMenu
     }
 
  
-
+    /// <summary>
+    /// Displays all reviews authored by the user and all reviews received for events organised by the user.
+    /// </summary>
     
     public void SeeMyReviews()
     {
@@ -62,6 +71,9 @@ public class ReviewMenu
         Console.ReadKey();
         Console.Clear();
     }
+    /// <summary>
+    /// Displays all reviews authored by the user and all reviews received for events organised by the user.
+    /// </summary>
 
      public void LeaveReview(Event selectedEvent)
     {
