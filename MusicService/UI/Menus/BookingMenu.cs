@@ -4,6 +4,9 @@ using MusicService.Services;
 
 namespace MusicService.UI.Menus;
 
+/// <summary>
+/// Menu flow for booking a ticket on an event.
+/// </summary>
 public class BookingMenu
 {
     private readonly BookingService _bookingService;
@@ -13,6 +16,9 @@ public class BookingMenu
         _bookingService = bookingService;
     }
 
+    /// <summary>
+    /// Asks the user to pick a ticket type and how many, then books it.
+    /// </summary>
     public void BookTicket(User user, Event evt)
     {
         Console.WriteLine();

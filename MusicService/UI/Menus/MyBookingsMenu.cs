@@ -4,6 +4,9 @@ using MusicService.Services;
 
 namespace MusicService.UI.Menus;
 
+/// <summary>
+/// Menu where the user sees their bookings and can cancel or leave a review.
+/// </summary>
 public class MyBookingsMenu
 {
     private readonly BookingService _bookingService;
@@ -17,6 +20,9 @@ public class MyBookingsMenu
         _currentUser = currentUser;
     }
 
+    /// <summary>
+    /// Shows the user's bookings split into upcoming, past and cancelled.
+    /// </summary>
     public void ShowMyBookingsMenu()
     {
         while (true)

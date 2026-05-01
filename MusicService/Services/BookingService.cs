@@ -5,6 +5,9 @@ using MusicService.Enums;
 
 namespace MusicService.Services;
 
+/// <summary>
+/// Handles the booking logic: creating, cancelling and getting bookings.
+/// </summary>
 public class BookingService
 {
     private DataStorage _storage;
@@ -14,6 +17,9 @@ public class BookingService
         _storage = storage;
     }
 
+    /// <summary>
+    /// Books a ticket if the event is upcoming and the ticket isn't sold out.
+    /// </summary>
     public Booking CreateBooking(User user, Event evt, TicketType ticket, int quantity)
     {
         // sjekk at brukeren ikke booker sitt eget event
@@ -33,6 +39,9 @@ public class BookingService
         return booking;
     }
 
+    /// <summary>
+    /// Cancels a booking and releases the tickets again.
+    /// </summary>
     public void CancelBooking(Booking booking, User user)
     {
         if (booking.User != user)
@@ -42,6 +51,9 @@ public class BookingService
         booking.TicketType.Release(booking.Quantity);
     }
 
+    /// <summary>
+    /// Gets all bookings belonging to a user.
+    /// </summary>
     public List<Booking> GetBookingsForUser(User user)
     {
         return _storage.Bookings.Where(b => b.User == user).ToList();
