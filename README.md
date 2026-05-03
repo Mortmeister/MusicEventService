@@ -35,13 +35,13 @@ dotnet build
 dotnet run --project MusicService
 ````
 
-**Test accounts (seeded on startup):**
+**Test accounts:**
 
-| Username | Password | Role                                      |
-|----------|----------|-------------------------------------------|
-| test     | test     | Organiser — has created several events    |
-| test2    | test2    | Organiser — has created Iron Maiden Live  |
-| buyer    | buyer    | Attendee — has bookings and past events, can leave reviews |
+| Username | Password | 
+|----------|----------|
+| test     | test     | 
+| test2    | test2    | 
+| buyer    | buyer    | 
 
 Reviews require a past event with a confirmed booking. Log in as `buyer` to test
  the review feature.
